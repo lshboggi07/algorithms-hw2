@@ -3,7 +3,7 @@
 import argparse
 import html
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import parse_qs, quote, unquote, urlsplit
 
 from src.hash_table import HashTable, LinearProbingHashTable
 from src.shortener import Shortener
@@ -98,12 +98,13 @@ def create_server(
 
             escaped_url = html.escape(url)
             escaped_code = html.escape(code)
+            short_link = html.escape(f"/r/{quote(code, safe='')}", quote=True)
             self._send_html(
                 200,
                 "단축 URL 생성 완료",
                 f"<p>원본 URL: <code>{escaped_url}</code></p>"
                 f'<p>단축 코드: <code>{escaped_code}</code></p>'
-                f'<p><a href="/r/{escaped_code}">열기</a></p>'
+                f'<p>단축 링크: <a href="{short_link}">{short_link}</a></p>'
                 '<p><a href="/">다른 URL 입력</a></p>',
             )
 
@@ -111,18 +112,12 @@ def create_server(
             table = application.table
             rows: list[str] = []
             for index, bucket in enumerate(table.snapshot()):
-                if not bucket:
-                    rows.append(
-                        f"<tr><td>{index}</td><td colspan=\"6\">(비어 있음)</td></tr>"
-                    )
-                    continue
-
-                entries: list[str] = []
-                for key, value in bucket:
+                nodes: list[str] = []
+                for node_index, (key, value) in enumerate(bucket):
                     result = table.probe(key)
                     previous = 0
                     calculation = "h=0"
-                    for character, codepoint, accumulator in result.hash_steps:
+                    for _, codepoint, accumulator in result.hash_steps:
                         calculation += (
                             f" -> (31*{previous}+{codepoint})%"
                             f"{table.capacity}={accumulator}"
@@ -131,27 +126,53 @@ def create_server(
                     probe_path = " -> ".join(
                         str(slot) for slot in result.probe_path
                     )
-                    entries.append(
-                        "<tr>"
-                        f"<td>{html.escape(key)}</td>"
-                        f"<td>{html.escape(str(value))}</td>"
-                        f"<td>{result.hash_index}</td>"
-                        f"<td><code>{html.escape(calculation)}</code></td>"
-                        f"<td>{html.escape(probe_path)}</td>"
-                        f"<td>{result.probes}</td>"
-                        "</tr>"
+                    code = str(value)
+                    short_link = f"/r/{quote(code, safe='')}"
+                    nodes.append(
+                        '<article class="chain-node">'
+                        f"<p><strong>URL 키:</strong> "
+                        f"<code>{html.escape(key)}</code></p>"
+                        f"<p><strong>짧은 코드:</strong> "
+                        f"<code>{html.escape(code)}</code></p>"
+                        f'<p><strong>짧은 링크:</strong> '
+                        f'<a href="{html.escape(short_link, quote=True)}">'
+                        f"{html.escape(short_link)}</a></p>"
+                        "<details>"
+                        "<summary>Horner 해시 계산 과정</summary>"
+                        f"<code>{html.escape(calculation)}</code>"
+                        "</details>"
+                        f"<p>검사한 슬롯: {html.escape(probe_path)}</p>"
+                        f"<p>노드 검사 횟수: {result.probes}</p>"
+                        "</article>"
                     )
+                    if node_index < len(bucket) - 1:
+                        nodes.append('<span class="chain-arrow">→</span>')
+                chain = (
+                    '<div class="chain">'
+                    + "".join(nodes)
+                    + '<span class="chain-end">끝</span></div>'
+                    if bucket
+                    else '<span class="empty-bucket">비어 있음</span>'
+                )
                 rows.append(
-                    f"<tr><th colspan=\"6\">버킷/슬롯 {index}</th></tr>"
-                    + "".join(entries)
+                    f'<tr><th scope="row">{index}</th><td>{chain}</td></tr>'
                 )
 
             content = (
                 f"<p>전략: {html.escape(table.strategy)}, 용량: {table.capacity}, "
                 f"URL 항목: {len(table)}</p>"
-                "<table border=\"1\"><thead><tr>"
-                "<th>키(URL)</th><th>값(코드)</th><th>해시 슬롯</th>"
-                "<th>Horner 계산</th><th>검사한 슬롯</th><th>검사 횟수</th>"
+                "<style>"
+                ".chain{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}"
+                ".chain-node{border:1px solid #888;border-radius:.4rem;"
+                "padding:.5rem;max-width:36rem}"
+                ".chain-node p{margin:.25rem 0;overflow-wrap:anywhere}"
+                ".chain-arrow{font-size:1.5rem;font-weight:bold}"
+                ".chain-end,.empty-bucket{color:#555}"
+                "table{border-collapse:collapse}th,td{border:1px solid #888;"
+                "padding:.5rem;vertical-align:top}"
+                "</style>"
+                "<table><caption>해시 버킷과 연결 리스트</caption>"
+                "<thead><tr><th>버킷</th><th>연결 리스트 노드</th>"
                 "</tr></thead><tbody>"
                 + "".join(rows)
                 + "</tbody></table><p><a href=\"/\">돌아가기</a></p>"
