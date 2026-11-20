@@ -34,8 +34,9 @@
 | 하고 싶은 것 | 명령 |
 | --- | --- |
 | 테스트 | `make test` |
-| 웹 서버 (포트 8000) | `make serve` |
-| 충돌 실험 | `make experiment` |
+| 웹 서버 (포트 8000, 체이닝) | `make serve` |
+| 선형 탐지 서버 | `make serve TABLE=linear` |
+| 적재율 실험 (CSV · SVG · PDF) | `make experiment` |
 | 놓친 단계 따라잡기 | `sh tools/catchup.sh <단계 번호>` |
 
 외부 라이브러리는 쓰지 않습니다. Python 표준 모듈만으로 충분합니다.

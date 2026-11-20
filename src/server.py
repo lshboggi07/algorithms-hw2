@@ -5,6 +5,7 @@ import html
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, unquote, urlsplit
 
+from src.hash_table import HashTable, LinearProbingHashTable
 from src.shortener import Shortener
 
 
@@ -112,7 +113,7 @@ def create_server(
             for index, bucket in enumerate(table.snapshot()):
                 if not bucket:
                     rows.append(
-                        f"<tr><td>{index}</td><td colspan=\"5\">(비어 있음)</td></tr>"
+                        f"<tr><td>{index}</td><td colspan=\"6\">(비어 있음)</td></tr>"
                     )
                     continue
 
@@ -127,25 +128,30 @@ def create_server(
                             f"{table.capacity}={accumulator}"
                         )
                         previous = accumulator
+                    probe_path = " -> ".join(
+                        str(slot) for slot in result.probe_path
+                    )
                     entries.append(
                         "<tr>"
                         f"<td>{html.escape(key)}</td>"
                         f"<td>{html.escape(str(value))}</td>"
                         f"<td>{result.hash_index}</td>"
                         f"<td><code>{html.escape(calculation)}</code></td>"
+                        f"<td>{html.escape(probe_path)}</td>"
                         f"<td>{result.probes}</td>"
                         "</tr>"
                     )
                 rows.append(
-                    f"<tr><th colspan=\"5\">버킷 {index}</th></tr>"
+                    f"<tr><th colspan=\"6\">버킷/슬롯 {index}</th></tr>"
                     + "".join(entries)
                 )
 
             content = (
-                f"<p>용량: {table.capacity}, URL 항목: {len(table)}</p>"
+                f"<p>전략: {html.escape(table.strategy)}, 용량: {table.capacity}, "
+                f"URL 항목: {len(table)}</p>"
                 "<table border=\"1\"><thead><tr>"
                 "<th>키(URL)</th><th>값(코드)</th><th>해시 슬롯</th>"
-                "<th>Horner 계산</th><th>검사 횟수</th>"
+                "<th>Horner 계산</th><th>검사한 슬롯</th><th>검사 횟수</th>"
                 "</tr></thead><tbody>"
                 + "".join(rows)
                 + "</tbody></table><p><a href=\"/\">돌아가기</a></p>"
@@ -159,9 +165,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run the URL shortener web server.")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument(
+        "--table", choices=("chaining", "linear"), default="chaining"
+    )
     args = parser.parse_args()
 
-    server = create_server(args.host, args.port)
+    table_class = (
+        LinearProbingHashTable if args.table == "linear" else HashTable
+    )
+    server = create_server(
+        args.host, args.port, Shortener(table_class=table_class)
+    )
     print(f"Serving on http://{args.host}:{args.port}")
     with server:
         server.serve_forever()

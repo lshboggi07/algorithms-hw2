@@ -1,6 +1,6 @@
 import unittest
 
-from src.hash_table import HashTable, horner_hash
+from src.hash_table import HashTable, LinearProbingHashTable, horner_hash
 
 
 class HornerHashTests(unittest.TestCase):
@@ -46,6 +46,35 @@ class HashTableTests(unittest.TestCase):
             result.hash_steps,
             (("a", 97, 9), ("b", 98, 3), ("c", 99, 5)),
         )
+
+
+class LinearProbingHashTableTests(unittest.TestCase):
+    def test_collisions_wrap_from_last_slot_to_first(self):
+        table = LinearProbingHashTable(capacity=5)
+        table.put("c", 1)
+        table.put("h", 2)
+        table.put("m", 3)
+
+        self.assertEqual(table.snapshot()[4], (("c", 1),))
+        self.assertEqual(table.snapshot()[0], (("h", 2),))
+        self.assertEqual(table.snapshot()[1], (("m", 3),))
+        result = table.probe("m")
+        self.assertEqual(result.probe_path, (4, 0, 1))
+        self.assertEqual(result.probes, 3)
+
+    def test_missing_key_and_full_table_are_bounded(self):
+        table = LinearProbingHashTable(capacity=2)
+        table.put("a", 1)
+        table.put("b", 2)
+        missing = table.probe("c")
+        self.assertFalse(missing.found)
+        self.assertEqual(missing.probes, 2)
+        with self.assertRaises(OverflowError):
+            table.put("c", 3)
+
+        table.put("a", 4)
+        self.assertEqual(table.get("a"), 4)
+        self.assertEqual(len(table), 2)
 
 
 if __name__ == "__main__":

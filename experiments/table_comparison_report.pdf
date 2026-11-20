@@ -1,0 +1,61 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1216 >>
+stream
+BT
+/F1 16 Tf
+50 790 Td
+(Hash Table Probe Comparison) Tj
+/F1 10 Tf
+0 -24 Td
+(Method: capacity 1000; identical deterministic keys; load factors 0.1-0.9.) Tj
+0 -24 Td
+(Probe count: inspected nodes for chaining and inspected slots for linear probing.) Tj
+0 -24 Td
+(Theory: chaining success 1+alpha/2; failure alpha.) Tj
+0 -24 Td
+(Theory: linear success \(1+1/\(1-alpha\)\)/2; failure \(1+1/\(1-alpha\)^2\)/2.) Tj
+0 -24 Td
+(Mean absolute error \(success/failure\): chaining 0.022/0.011; linear 0.180/0.512.) Tj
+0 -24 Td
+(At alpha 0.9, chaining measured success/failure 1.47/0.93; theory 1.45/0.90.) Tj
+0 -24 Td
+(At alpha 0.9, linear measured success/failure 6.11/49.53; theory 5.50/50.50.) Tj
+0 -24 Td
+(Interpretation: chaining stays near its linear-in-load-factor estimates.) Tj
+0 -24 Td
+(Linear probing rises sharply near full capacity because occupied clusters grow.) Tj
+0 -24 Td
+(Largest linear miss deviation: alpha 0.8, measured 15.20 vs theory 13.00; finite-sample hash clustering violates uniform-hashing assumptions.) Tj
+0 -24 Td
+(At high load, a failed linear search is substantially costlier than chaining.) Tj
+0 -24 Td
+(Reproduce with make experiment; see table_comparison.csv and table_comparison.svg.) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1579
+%%EOF

@@ -3,6 +3,8 @@ import threading
 import unittest
 from urllib.parse import urlencode
 
+from src.hash_table import LinearProbingHashTable
+from src.shortener import Shortener
 from src.server import create_server
 
 
@@ -72,6 +74,39 @@ class ServerTests(unittest.TestCase):
         self.assertIn("Horner", body)
         self.assertIn("검사", body)
         self.assertIn("https://example.com/", body)
+
+    def test_linear_table_page_shows_strategy_and_slots_examined(self):
+        server = create_server(
+            "127.0.0.1",
+            0,
+            Shortener(table_class=LinearProbingHashTable, capacity=5),
+        )
+        thread = threading.Thread(target=server.serve_forever)
+        thread.start()
+        connection = http.client.HTTPConnection(
+            "127.0.0.1", server.server_address[1]
+        )
+        try:
+            connection.request(
+                "POST",
+                "/shorten",
+                urlencode({"url": "https://example.com/"}),
+                {"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            response = connection.getresponse()
+            response.read()
+            connection.request("GET", "/table")
+            response = connection.getresponse()
+            body = response.read().decode("utf-8")
+        finally:
+            connection.close()
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
+        self.assertIn("linear probing", body)
+        self.assertIn("검사한 슬롯", body)
+        self.assertIn("Horner", body)
 
 
 if __name__ == "__main__":
