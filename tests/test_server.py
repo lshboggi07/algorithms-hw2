@@ -45,7 +45,7 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("&lt;tag&gt;", body)
         self.assertNotIn("<tag>", body)
-        self.assertIn('href="/r/1"', body)
+        self.assertIn('<a href="/r/1">/r/1</a>', body)
 
         status, headers, _ = self.request("GET", "/r/1")
         self.assertEqual(status, 302)
@@ -62,18 +62,43 @@ class ServerTests(unittest.TestCase):
         status, _, _ = self.request("GET", "/r/missing")
         self.assertEqual(status, 404)
 
-    def test_table_page_shows_hash_trace_and_probe_count(self):
-        self.request(
-            "POST",
-            "/shorten",
-            urlencode({"url": "https://example.com/"}),
-            {"Content-Type": "application/x-www-form-urlencoded"},
+    def test_table_page_shows_chains_links_and_collapsible_hash_steps(self):
+        server = create_server("127.0.0.1", 0, Shortener(capacity=1))
+        thread = threading.Thread(target=server.serve_forever)
+        thread.start()
+        connection = http.client.HTTPConnection(
+            "127.0.0.1", server.server_address[1]
         )
-        status, _, body = self.request("GET", "/table")
-        self.assertEqual(status, 200)
-        self.assertIn("Horner", body)
-        self.assertIn("검사", body)
-        self.assertIn("https://example.com/", body)
+        try:
+            for url in ("https://example.com/one", "https://example.com/two"):
+                connection.request(
+                    "POST",
+                    "/shorten",
+                    urlencode({"url": url}),
+                    {"Content-Type": "application/x-www-form-urlencoded"},
+                )
+                response = connection.getresponse()
+                response.read()
+
+            connection.request("GET", "/table")
+            response = connection.getresponse()
+            body = response.read().decode("utf-8")
+        finally:
+            connection.close()
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
+        self.assertEqual(response.status, 200)
+        self.assertIn("https://example.com/one", body)
+        self.assertIn("https://example.com/two", body)
+        self.assertIn("→", body)
+        self.assertIn('<a href="/r/1">/r/1</a>', body)
+        self.assertIn('<a href="/r/2">/r/2</a>', body)
+        self.assertIn("<details>", body)
+        self.assertIn("</details>", body)
+        self.assertIn("Horner 해시 계산 과정", body)
+        self.assertIn("노드 검사 횟수", body)
 
     def test_linear_table_page_shows_strategy_and_slots_examined(self):
         server = create_server(
