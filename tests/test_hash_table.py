@@ -39,6 +39,23 @@ class HashTableTests(unittest.TestCase):
         self.assertEqual(table.get("a"), 3)
         self.assertEqual(len(table), 2)
 
+    def test_long_collision_chain_counts_each_node(self):
+        table = HashTable(capacity=2)
+        colliding_keys = ("a", "c", "e", "g")
+        for value, key in enumerate(colliding_keys):
+            table.put(key, value)
+
+        for expected_probes, key in enumerate(colliding_keys, start=1):
+            with self.subTest(key=key):
+                result = table.probe(key)
+                self.assertTrue(result.found)
+                self.assertEqual(result.value, expected_probes - 1)
+                self.assertEqual(result.probes, expected_probes)
+
+        missing = table.probe("i")
+        self.assertFalse(missing.found)
+        self.assertEqual(missing.probes, len(colliding_keys))
+
     def test_probe_reports_hash_calculation(self):
         result = HashTable(capacity=11).probe("abc")
         self.assertEqual(result.hash_index, 5)

@@ -17,6 +17,20 @@ class ShortenerTests(unittest.TestCase):
                     shortener.expand(code), "https://example.com/a?b=1"
                 )
 
+    def test_accepts_http_and_https(self):
+        for table_class in self.table_classes:
+            with self.subTest(table=table_class.__name__):
+                shortener = Shortener(table_class=table_class, capacity=7)
+                urls = (
+                    "http://example.com/",
+                    "https://example.org/",
+                )
+                codes = [shortener.shorten(url) for url in urls]
+                self.assertNotEqual(codes[0], codes[1])
+                self.assertEqual(
+                    [shortener.expand(code) for code in codes], list(urls)
+                )
+
     def test_same_url_reuses_code_and_different_urls_do_not(self):
         for table_class in self.table_classes:
             with self.subTest(table=table_class.__name__):
@@ -38,6 +52,7 @@ class ShortenerTests(unittest.TestCase):
                 "ftp://example.com/file",
                 "https:///missing-host",
                 "https://example.com/white space",
+                "https://example.com:invalid/",
                 "https://[invalid",
             ):
                 with self.subTest(table=table_class.__name__, url=url):
@@ -52,6 +67,8 @@ class ShortenerTests(unittest.TestCase):
                     shortener.shorten(1)
                 with self.assertRaises(KeyError):
                     shortener.expand("unknown")
+                with self.assertRaises(TypeError):
+                    shortener.expand(1)
 
 
 if __name__ == "__main__":
