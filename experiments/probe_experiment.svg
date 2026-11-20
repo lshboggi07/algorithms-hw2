@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+<title>Separate chaining probe counts by load factor</title>
+<rect width="100%" height="100%" fill="white"/>
+<text x="450" y="25" text-anchor="middle" font-size="18">체이닝 적재율과 평균 탐색 횟수</text>
+<line x1="75" y1="440.0" x2="870" y2="440.0" stroke="#dddddd"/>
+<text x="63" y="445.0" text-anchor="end" font-size="12">0</text>
+<line x1="75" y1="374.2" x2="870" y2="374.2" stroke="#dddddd"/>
+<text x="63" y="379.2" text-anchor="end" font-size="12">1</text>
+<line x1="75" y1="308.3" x2="870" y2="308.3" stroke="#dddddd"/>
+<text x="63" y="313.3" text-anchor="end" font-size="12">2</text>
+<line x1="75" y1="242.5" x2="870" y2="242.5" stroke="#dddddd"/>
+<text x="63" y="247.5" text-anchor="end" font-size="12">3</text>
+<line x1="75" y1="176.7" x2="870" y2="176.7" stroke="#dddddd"/>
+<text x="63" y="181.7" text-anchor="end" font-size="12">4</text>
+<line x1="75" y1="110.8" x2="870" y2="110.8" stroke="#dddddd"/>
+<text x="63" y="115.8" text-anchor="end" font-size="12">5</text>
+<line x1="75" y1="45.0" x2="870" y2="45.0" stroke="#dddddd"/>
+<text x="63" y="50.0" text-anchor="end" font-size="12">6</text>
+<line x1="75.0" y1="45" x2="75.0" y2="440" stroke="#eeeeee"/>
+<text x="75.0" y="462" text-anchor="middle" font-size="12">0</text>
+<line x1="174.4" y1="45" x2="174.4" y2="440" stroke="#eeeeee"/>
+<text x="174.4" y="462" text-anchor="middle" font-size="12">0.5</text>
+<line x1="273.8" y1="45" x2="273.8" y2="440" stroke="#eeeeee"/>
+<text x="273.8" y="462" text-anchor="middle" font-size="12">1</text>
+<line x1="373.1" y1="45" x2="373.1" y2="440" stroke="#eeeeee"/>
+<text x="373.1" y="462" text-anchor="middle" font-size="12">1.5</text>
+<line x1="472.5" y1="45" x2="472.5" y2="440" stroke="#eeeeee"/>
+<text x="472.5" y="462" text-anchor="middle" font-size="12">2</text>
+<line x1="571.9" y1="45" x2="571.9" y2="440" stroke="#eeeeee"/>
+<text x="571.9" y="462" text-anchor="middle" font-size="12">2.5</text>
+<line x1="671.2" y1="45" x2="671.2" y2="440" stroke="#eeeeee"/>
+<text x="671.2" y="462" text-anchor="middle" font-size="12">3</text>
+<line x1="770.6" y1="45" x2="770.6" y2="440" stroke="#eeeeee"/>
+<text x="770.6" y="462" text-anchor="middle" font-size="12">3.5</text>
+<line x1="870.0" y1="45" x2="870.0" y2="440" stroke="#eeeeee"/>
+<text x="870.0" y="462" text-anchor="middle" font-size="12">4</text>
+<polyline points="124.7,364.3 174.4,359.7 224.1,351.8 273.8,341.2 323.4,334.3 373.1,325.4 422.8,317.9 472.5,309.3 522.2,300.9 571.9,291.5 621.6,282.8 671.2,275.9 720.9,268.2 770.6,261.1 820.3,252.3 870.0,244.5" fill="none" stroke="#1769aa" stroke-width="2"/>
+<circle cx="124.7" cy="364.3" r="2.5" fill="#1769aa"/>
+<circle cx="174.4" cy="359.7" r="2.5" fill="#1769aa"/>
+<circle cx="224.1" cy="351.8" r="2.5" fill="#1769aa"/>
+<circle cx="273.8" cy="341.2" r="2.5" fill="#1769aa"/>
+<circle cx="323.4" cy="334.3" r="2.5" fill="#1769aa"/>
+<circle cx="373.1" cy="325.4" r="2.5" fill="#1769aa"/>
+<circle cx="422.8" cy="317.9" r="2.5" fill="#1769aa"/>
+<circle cx="472.5" cy="309.3" r="2.5" fill="#1769aa"/>
+<circle cx="522.2" cy="300.9" r="2.5" fill="#1769aa"/>
+<circle cx="571.9" cy="291.5" r="2.5" fill="#1769aa"/>
+<circle cx="621.6" cy="282.8" r="2.5" fill="#1769aa"/>
+<circle cx="671.2" cy="275.9" r="2.5" fill="#1769aa"/>
+<circle cx="720.9" cy="268.2" r="2.5" fill="#1769aa"/>
+<circle cx="770.6" cy="261.1" r="2.5" fill="#1769aa"/>
+<circle cx="820.3" cy="252.3" r="2.5" fill="#1769aa"/>
+<circle cx="870.0" cy="244.5" r="2.5" fill="#1769aa"/>
+<line x1="160" y1="489" x2="188" y2="489" stroke="#1769aa" stroke-width="2"/>
+<text x="196" y="493" font-size="12">성공 측정</text>
+<polyline points="124.7,365.9 174.4,357.7 224.1,349.5 273.8,341.2 323.4,333.0 373.1,324.8 422.8,316.6 472.5,308.3 522.2,300.1 571.9,291.9 621.6,283.6 671.2,275.4 720.9,267.2 770.6,259.0 820.3,250.7 870.0,242.5" fill="none" stroke="#1769aa" stroke-width="2" stroke-dasharray="6 4"/>
+<circle cx="124.7" cy="365.9" r="2.5" fill="#1769aa"/>
+<circle cx="174.4" cy="357.7" r="2.5" fill="#1769aa"/>
+<circle cx="224.1" cy="349.5" r="2.5" fill="#1769aa"/>
+<circle cx="273.8" cy="341.2" r="2.5" fill="#1769aa"/>
+<circle cx="323.4" cy="333.0" r="2.5" fill="#1769aa"/>
+<circle cx="373.1" cy="324.8" r="2.5" fill="#1769aa"/>
+<circle cx="422.8" cy="316.6" r="2.5" fill="#1769aa"/>
+<circle cx="472.5" cy="308.3" r="2.5" fill="#1769aa"/>
+<circle cx="522.2" cy="300.1" r="2.5" fill="#1769aa"/>
+<circle cx="571.9" cy="291.9" r="2.5" fill="#1769aa"/>
+<circle cx="621.6" cy="283.6" r="2.5" fill="#1769aa"/>
+<circle cx="671.2" cy="275.4" r="2.5" fill="#1769aa"/>
+<circle cx="720.9" cy="267.2" r="2.5" fill="#1769aa"/>
+<circle cx="770.6" cy="259.0" r="2.5" fill="#1769aa"/>
+<circle cx="820.3" cy="250.7" r="2.5" fill="#1769aa"/>
+<circle cx="870.0" cy="242.5" r="2.5" fill="#1769aa"/>
+<line x1="430" y1="489" x2="458" y2="489" stroke="#1769aa" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="466" y="493" font-size="12">성공 이론</text>
+<polyline points="124.7,422.5 174.4,406.2 224.1,390.3 273.8,372.8 323.4,356.4 373.1,341.4 422.8,324.6 472.5,309.1 522.2,292.8 571.9,277.2 621.6,260.3 671.2,244.7 720.9,228.8 770.6,213.2 820.3,196.9 870.0,180.7" fill="none" stroke="#d1495b" stroke-width="2"/>
+<circle cx="124.7" cy="422.5" r="2.5" fill="#d1495b"/>
+<circle cx="174.4" cy="406.2" r="2.5" fill="#d1495b"/>
+<circle cx="224.1" cy="390.3" r="2.5" fill="#d1495b"/>
+<circle cx="273.8" cy="372.8" r="2.5" fill="#d1495b"/>
+<circle cx="323.4" cy="356.4" r="2.5" fill="#d1495b"/>
+<circle cx="373.1" cy="341.4" r="2.5" fill="#d1495b"/>
+<circle cx="422.8" cy="324.6" r="2.5" fill="#d1495b"/>
+<circle cx="472.5" cy="309.1" r="2.5" fill="#d1495b"/>
+<circle cx="522.2" cy="292.8" r="2.5" fill="#d1495b"/>
+<circle cx="571.9" cy="277.2" r="2.5" fill="#d1495b"/>
+<circle cx="621.6" cy="260.3" r="2.5" fill="#d1495b"/>
+<circle cx="671.2" cy="244.7" r="2.5" fill="#d1495b"/>
+<circle cx="720.9" cy="228.8" r="2.5" fill="#d1495b"/>
+<circle cx="770.6" cy="213.2" r="2.5" fill="#d1495b"/>
+<circle cx="820.3" cy="196.9" r="2.5" fill="#d1495b"/>
+<circle cx="870.0" cy="180.7" r="2.5" fill="#d1495b"/>
+<line x1="160" y1="489" x2="188" y2="489" stroke="#d1495b" stroke-width="2"/>
+<text x="196" y="493" font-size="12">실패 측정</text>
+<polyline points="124.7,423.5 174.4,407.1 224.1,390.6 273.8,374.2 323.4,357.7 373.1,341.2 422.8,324.8 472.5,308.3 522.2,291.9 571.9,275.4 621.6,259.0 671.2,242.5 720.9,226.0 770.6,209.6 820.3,193.1 870.0,176.7" fill="none" stroke="#d1495b" stroke-width="2" stroke-dasharray="6 4"/>
+<circle cx="124.7" cy="423.5" r="2.5" fill="#d1495b"/>
+<circle cx="174.4" cy="407.1" r="2.5" fill="#d1495b"/>
+<circle cx="224.1" cy="390.6" r="2.5" fill="#d1495b"/>
+<circle cx="273.8" cy="374.2" r="2.5" fill="#d1495b"/>
+<circle cx="323.4" cy="357.7" r="2.5" fill="#d1495b"/>
+<circle cx="373.1" cy="341.2" r="2.5" fill="#d1495b"/>
+<circle cx="422.8" cy="324.8" r="2.5" fill="#d1495b"/>
+<circle cx="472.5" cy="308.3" r="2.5" fill="#d1495b"/>
+<circle cx="522.2" cy="291.9" r="2.5" fill="#d1495b"/>
+<circle cx="571.9" cy="275.4" r="2.5" fill="#d1495b"/>
+<circle cx="621.6" cy="259.0" r="2.5" fill="#d1495b"/>
+<circle cx="671.2" cy="242.5" r="2.5" fill="#d1495b"/>
+<circle cx="720.9" cy="226.0" r="2.5" fill="#d1495b"/>
+<circle cx="770.6" cy="209.6" r="2.5" fill="#d1495b"/>
+<circle cx="820.3" cy="193.1" r="2.5" fill="#d1495b"/>
+<circle cx="870.0" cy="176.7" r="2.5" fill="#d1495b"/>
+<line x1="430" y1="489" x2="458" y2="489" stroke="#d1495b" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="466" y="493" font-size="12">실패 이론</text>
+<text x="472.5" y="515" text-anchor="middle" font-size="13">적재율 (원소 수 / 버킷 수)</text>
+<text x="18" y="242.5" transform="rotate(-90 18 242.5)" text-anchor="middle" font-size="13">평균 비교 노드 수</text>
+</svg>
