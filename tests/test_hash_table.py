@@ -15,6 +15,18 @@ class HornerHashTests(unittest.TestCase):
 
 
 class HashTableTests(unittest.TestCase):
+    def test_none_max_load_keeps_the_configured_capacity(self):
+        table = HashTable(capacity=2, max_load=None)
+        for value, key in enumerate(("a", "c", "e", "g", "i")):
+            table.put(key, value)
+
+        self.assertEqual(table.capacity, 2)
+        self.assertEqual(len(table), 5)
+
+    def test_fixed_capacity_table_rejects_a_load_limit(self):
+        with self.assertRaises(ValueError):
+            HashTable(capacity=2, max_load=0.75)
+
     def test_missing_key_and_empty_key(self):
         table = HashTable(capacity=3)
         self.assertEqual(len(table), 0)
