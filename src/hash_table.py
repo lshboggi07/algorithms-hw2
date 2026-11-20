@@ -53,11 +53,18 @@ class _Entry:
 
 
 class HashTable:
-    """Fixed-capacity separate chaining table for string keys."""
+    """Fixed-capacity separate chaining table for string keys.
+
+    ``max_load=None`` explicitly disables resizing so the capacity remains fixed.
+    """
 
     strategy = "chaining"
 
-    def __init__(self, capacity: int = 101) -> None:
+    def __init__(
+        self, capacity: int = 101, *, max_load: None = None
+    ) -> None:
+        if max_load is not None:
+            raise ValueError("fixed-capacity tables require max_load=None")
         if type(capacity) is not int or capacity <= 0:
             raise ValueError("capacity must be a positive integer")
         self.capacity = capacity

@@ -7,27 +7,29 @@ from pathlib import Path
 from src.hash_table import HashTable
 
 
-CAPACITY = 400
-QUERY_COUNT = 1000
+CAPACITY = 4093
+QUERY_COUNT = CAPACITY
 LOAD_FACTORS = tuple(step / 4 for step in range(1, 17))
 OUTPUT_DIR = Path(__file__).parent
 
 
 def build_results() -> list[dict[str, float | int]]:
     random_source = random.Random(2026)
-    keys: list[str] = []
-    for index in range(CAPACITY * 4):
-        keys.append(f"item-{index:04d}-{random_source.getrandbits(64):016x}")
-
+    max_key_count = round(CAPACITY * LOAD_FACTORS[-1])
+    keys = [
+        f"https://item-{random_source.getrandbits(64):016x}.example/{index}"
+        for index in range(max_key_count)
+    ]
     misses = [
-        f"miss-{index:04d}-{random_source.getrandbits(64):016x}"
+        f"https://miss-{random_source.getrandbits(64):016x}.example/{index}"
         for index in range(QUERY_COUNT)
     ]
 
     results: list[dict[str, float | int]] = []
-    for load_factor in LOAD_FACTORS:
-        key_count = int(CAPACITY * load_factor)
-        table = HashTable(capacity=CAPACITY)
+    for target_load_factor in LOAD_FACTORS:
+        key_count = round(CAPACITY * target_load_factor)
+        load_factor = key_count / CAPACITY
+        table = HashTable(capacity=CAPACITY, max_load=None)
         selected_keys = keys[:key_count]
         for index, key in enumerate(selected_keys):
             table.put(key, index)
@@ -40,7 +42,9 @@ def build_results() -> list[dict[str, float | int]]:
         ) / QUERY_COUNT
         results.append(
             {
+                "target_load_factor": target_load_factor,
                 "load_factor": load_factor,
+                "capacity": CAPACITY,
                 "key_count": key_count,
                 "measured_successful": measured_successful,
                 "theoretical_successful": 1 + load_factor / 2,
@@ -53,7 +57,9 @@ def build_results() -> list[dict[str, float | int]]:
 
 def write_csv(results: list[dict[str, float | int]], path: Path) -> None:
     fieldnames = (
+        "target_load_factor",
         "load_factor",
+        "capacity",
         "key_count",
         "measured_successful",
         "theoretical_successful",
@@ -129,7 +135,7 @@ def write_svg(results: list[dict[str, float | int]], path: Path) -> None:
             lines.append(
                 f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.5" fill="{color}"/>'
             )
-        legend_x = 160 + (series_index % 2) * 270
+        legend_x = 70 + series_index * 205
         legend_y = height - 27
         lines.append(
             f'<line x1="{legend_x}" y1="{legend_y - 4}" '
@@ -157,15 +163,16 @@ def write_svg(results: list[dict[str, float | int]], path: Path) -> None:
 
 def main() -> None:
     results = build_results()
-    csv_path = OUTPUT_DIR / "probe_results.csv"
-    svg_path = OUTPUT_DIR / "probe_experiment.svg"
+    csv_path = OUTPUT_DIR / "results.csv"
+    svg_path = OUTPUT_DIR / "results.svg"
     write_csv(results, csv_path)
     write_svg(results, svg_path)
 
-    print("α | 성공(측정/이론) | 실패(측정/이론)")
+    print("목표 α | 실제 α | n | 성공(측정/이론) | 실패(측정/이론)")
     for row in results:
         print(
-            f"{row['load_factor']:.2f} | "
+            f"{row['target_load_factor']:.2f} | {row['load_factor']:.4f} | "
+            f"{row['key_count']} | "
             f"{row['measured_successful']:.3f}/{row['theoretical_successful']:.3f} | "
             f"{row['measured_unsuccessful']:.3f}/"
             f"{row['theoretical_unsuccessful']:.3f}"
